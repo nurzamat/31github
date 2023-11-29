@@ -81,3 +81,30 @@ def save_registration(address, city, country, username, email, first_name, last_
     return user
 
 
+def validate_username_ajax(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'Такой логин существует в системе'
+    return JsonResponse(data)
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('account:user_login')
+
+
+@login_required
+def home(request):
+    user = request.user
+    return render(request, 'account/home.html', {'node': user.node, 'user': user})
+
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'account/profile.html', {'node': user.node, 'user': user})
+
