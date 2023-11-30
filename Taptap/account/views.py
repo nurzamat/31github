@@ -58,7 +58,7 @@ def signup(request):
 
         try:
             with transaction.atomic():
-                user = save_registration(address, city, country, username, email, first_name, last_name, iddle_name, password, phone)
+                user = save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone)
         except IntegrityError:
             return render(request, 'account/signup.html', {'alert': "Ошибка при регистрации",
                                                            'inviter': inviter})
@@ -100,11 +100,11 @@ def user_logout(request):
 @login_required
 def home(request):
     user = request.user
-    return render(request, 'account/home.html', {'node': user.node, 'user': user})
+    return render(request, 'account/home.html', {'profile': user.userprofile, 'user': user})
 
 
 @login_required
 def profile(request):
     user = request.user
-    return render(request, 'account/profile.html', {'node': user.node, 'user': user})
+    return render(request, 'account/profile.html', {'profile': user.userprofile, 'user': user})
 
