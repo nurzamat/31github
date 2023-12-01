@@ -28,9 +28,7 @@ def user_login(request):
 
 def signup(request):
     if request.method == "POST":
-        inviter = request.POST.get('inviter')
         email_phone = request.POST.get('email_phone')
-        tree_parent = request.POST.get('parent_id')
         username = request.POST.get('username')
         password = request.POST.get('user_password')
         first_name = request.POST.get('first_name')
@@ -47,28 +45,24 @@ def signup(request):
             email = ''
             phone = email_phone
 
-        if inviter == '':
-            return render(request, 'account/signup.html', {'alert': "Регистрируйтесь по реферальной ссылке",
-                                                           'inviter': inviter})
-
         username_exists = User.objects.filter(username__iexact=username).exists()
         if username_exists:
             return render(request, 'account/signup.html', {'alert': "Такой логин существует в системе",
-                                                           'inviter': inviter})
+                                                           'username': username})
 
         try:
             with transaction.atomic():
                 user = save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone)
         except IntegrityError:
             return render(request, 'account/signup.html', {'alert': "Ошибка при регистрации",
-                                                           'inviter': inviter})
+                                                           'username': username})
 
         if user:
             login(request, user)
             return redirect('account:home')
         else:
             return render(request, 'account/signup.html', {'alert': "Ошибка регистрации",
-                                                           'inviter': inviter})
+                                                           'username': username})
     else:
         return render(request, 'account/signup.html')
 
