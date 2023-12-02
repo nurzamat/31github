@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db import IntegrityError, transaction
+from .models import UserProfile
 
 
 def index(request):
@@ -52,12 +53,12 @@ def signup(request):
 
         try:
             with transaction.atomic():
-                user = save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone)
+                user_profile, user = save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone)
         except IntegrityError:
             return render(request, 'account/signup.html', {'alert': "Ошибка при регистрации",
                                                            'username': username})
 
-        if user:
+        if user and user_profile:
             login(request, user)
             return redirect('account:home')
         else:
@@ -72,7 +73,10 @@ def save_registration(address, city, country, username, email, first_name, last_
     user = User(username=username, email=email, first_name=first_name, last_name=last_name, is_staff=1)
     user.set_password(password)
     user.save()
-    return user
+    user_profile = UserProfile.objects.create(user=user, address=address, country=country, city=city,
+                                              middle_name=middle_name, phone=phone)
+
+    return user_profile, user
 
 
 def validate_username_ajax(request):
