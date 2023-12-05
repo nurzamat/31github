@@ -3,3 +3,5 @@ from . import views
 
 app_name = 'api'
 
+urlpatterns = [
+]
