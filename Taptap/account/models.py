@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profiles')
     middle_name = models.CharField(max_length=60, null=True)
     phone = models.CharField(max_length=60, null=True)
     city = models.CharField(max_length=60, null=True)
