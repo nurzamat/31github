@@ -58,6 +58,91 @@ def regions(request):
     serializer = RegionSerializer(regions_list, many=True)
     return Response(serializer.data)
 
+@api_view(["GET"])
+#@permission_classes((IsAuthenticated,))
+def user_posts(request, user_id):
+    page = request.GET.get('page', 1)
+    posts = Post.objects.filter(user__pk=user_id)
+    paginator = Paginator(posts, 50)
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def post_hitcount(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.hitcount += 1
+    post.save()
+    return Response({'hitcount': post.hitcount})
+
+
+@api_view(["GET"])
+def posts(request, post_type):
+    if post_type == 0:
+        posts_list = Post.objects.order_by('-created_at')[:1000]
+    else:
+        posts_list = Post.objects.filter(type=post_type).order_by('-created_at')[:1000]
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts_list, 50)
+
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = None  #paginator.page(paginator.num_pages)
+
+    serializer = PostSerializer(posts_list, many=True)
+    return Response({'error': False, 'posts': serializer.data})
+
+
+@api_view(["POST"])
+def search_post(request):
+    data = request.data
+    if data.get('type') == 0:  # search in all posts
+        posts_list = Post.objects.filter(title__icontains=data.get('title')).order_by('-created_at')[:1000]
+    else:
+        posts_list = Post.objects.filter(**data.get('kwargs')).order_by('-created_at')[:1000]
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts_list, 50)
+
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
+
+    serializer = PostSerializer(posts_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def create_post(request):
+    serializer = PostSerializer(data=request.data)
+    if serializer.is_valid():
+        post = serializer.save()
+        return Response({'message': 'Post created', 'error': False, 'id': post.id})
+    else:
+        data = {'error': True, 'message': serializer.errors}
+        return Response(data)
+
+
+@api_view(["GET"])
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    serializer = PostSerializer(post)
+    return Response(serializer.data)
 
 
 
