@@ -59,7 +59,7 @@ class Image(models.Model):
 
 
 def identicon_url(source, size):
-        return '/identicon/image/' + source + '.png?w=' + size + '&h=' + size
+    return '/identicon/image/' + source + '.png?w=' + size + '&h=' + size
 
 
 class Thumbnail(ImageSpec):
@@ -103,7 +103,7 @@ class UserProfile(models.Model):
             avatar = Thumbnail(source=self.avatar_original_image)
             return '/media/' + avatar.cachefile_name
         else:
-            #set 10px less size since 5px padding. See settings for PYDENTICON_PADDING
+            # set 10px less size since 5px padding. See settings for PYDENTICON_PADDING
             return identicon_url(self.user.username, '30')
 
     def __str__(self):

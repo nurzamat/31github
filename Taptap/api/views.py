@@ -36,6 +36,7 @@ def login(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({"token": token.key, 'user_id': user.pk, 'username': user.username, 'error': False})
 
+
 """@api_view(['POST'])
 def update_profile(request, user_id):
     user = User.objects.get(pk=user_id)
@@ -58,13 +59,13 @@ def regions(request):
     serializer = RegionSerializer(regions_list, many=True)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 #@permission_classes((IsAuthenticated,))
 def user_posts(request, user_id):
     page = request.GET.get('page', 1)
     posts = Post.objects.filter(user__pk=user_id)
     paginator = Paginator(posts, 50)
-
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
