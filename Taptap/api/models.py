@@ -38,6 +38,16 @@ class Post(models.Model):
         return self.content
 
 
+class PostComment(models.Model):
+    message = models.CharField(max_length=4096)
+    user = models.ForeignKey(User, default='', related_name='comments', on_delete=models.RESTRICT)
+    post = models.ForeignKey(Post, default='', related_name='comments', on_delete=models.RESTRICT)
+    created_at = models.DateTimeField(auto_now=True, blank=True)
+
+    def __str__(self):
+        return self.content
+
+
 class Image(models.Model):
     reindex_related = ('post',)
     post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
