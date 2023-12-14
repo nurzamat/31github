@@ -53,10 +53,10 @@ def signup(request):
 
         try:
             with transaction.atomic():
-                user_profile, user = save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone)
-        except IntegrityError:
-            return render(request, 'account/signup.html', {'alert': "Ошибка при регистрации",
-                                                           'username': username})
+                user_profile, user = save_registration(address, city, country, username, email, first_name, last_name,
+                                                       middle_name, password, phone)
+        except EOFError:
+            return render(request, 'account/signup.html', {'alert': "Ошибка при регистрации", 'username': username})
 
         if user and user_profile:
             login(request, user)
@@ -69,7 +69,6 @@ def signup(request):
 
 
 def save_registration(address, city, country, username, email, first_name, last_name, middle_name, password, phone):
-
     user = User(username=username, email=email, first_name=first_name, last_name=last_name, is_staff=1)
     user.set_password(password)
     user.save()
@@ -105,4 +104,3 @@ def home(request):
 def profile(request):
     user = request.user
     return render(request, 'account/profile.html', {'profile': user.userprofile, 'user': user})
-
