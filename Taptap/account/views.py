@@ -1,11 +1,10 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.urls import reverse
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.db import IntegrityError, transaction
+from django.contrib.auth.models import User
+from django.db import transaction
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+
 from api.models import UserProfile
 
 
