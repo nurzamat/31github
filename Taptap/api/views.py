@@ -37,12 +37,11 @@ def login(request):
     return Response({"token": token.key, 'user_id': user.pk, 'username': user.username, 'error': False})
 
 
-"""@api_view(['POST'])
+@api_view(['POST'])
 def update_profile(request, user_id):
     user = User.objects.get(pk=user_id)
-    user.profile.bio = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit...'
+    user.profile.bio = request.POST.get('bio')
     user.save()
-"""
 
 
 @api_view(["GET"])
