@@ -84,7 +84,11 @@ class Like(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
     name = models.CharField(max_length=100, null=True)
     username = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=100, null=True)
