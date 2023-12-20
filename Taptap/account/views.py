@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import transaction, IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from datetime import datetime
 
 from api.models import UserProfile
 
@@ -71,7 +72,8 @@ def save_registration(address, city, country, username, email, first_name, last_
     user = User(username=username, email=email, first_name=first_name, last_name=last_name, is_staff=1)
     user.set_password(password)
     user.save()
-    user_profile = UserProfile(user=user, address=address, country=country, city=city, middle_name=middle_name, phone=phone)
+    user_profile = UserProfile(user=user, address=address, country=country, city=city, middle_name=middle_name,
+                               phone=phone, created_at=datetime.now())
     user_profile.save()
 
     return user_profile, user
