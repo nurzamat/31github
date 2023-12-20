@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'Taptap.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "taptap_db",
+        "NAME": "taptap_test",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "localhost",
