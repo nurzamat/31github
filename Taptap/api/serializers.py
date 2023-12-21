@@ -34,6 +34,12 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ('id', 'original_image')
 
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ('id',)
+
+
 # Category posts
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer()
