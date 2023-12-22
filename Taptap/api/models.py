@@ -128,6 +128,11 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+class Following(models.Model):
+    target = models.ForeignKey('UserProfile', related_name='followers', on_delete=models.CASCADE)
+    follower = models.ForeignKey('UserProfile', related_name='targets', on_delete=models.CASCADE)
+
+
 class ChatRoom(models.Model):
     name = models.CharField(max_length=200)
     create_at = models.DateTimeField('date created')
