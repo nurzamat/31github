@@ -133,6 +133,11 @@ class Following(models.Model):
     follower = models.ForeignKey('UserProfile', related_name='targets', on_delete=models.CASCADE)
 
 
+class BlockedProfile(models.Model):
+    blocked_user = models.ForeignKey('UserProfile', related_name='blocked_bys', on_delete=models.CASCADE)
+    blocked_by = models.ForeignKey('UserProfile', related_name='blocked_users', on_delete=models.CASCADE)
+
+
 class ChatRoom(models.Model):
     name = models.CharField(max_length=200)
     create_at = models.DateTimeField('date created')
