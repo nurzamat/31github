@@ -134,8 +134,18 @@ class Following(models.Model):
 
 
 class BlockedProfile(models.Model):
-    blocked_user = models.ForeignKey('UserProfile', related_name='blocked_bys', on_delete=models.CASCADE)
-    blocked_by = models.ForeignKey('UserProfile', related_name='blocked_users', on_delete=models.CASCADE)
+    blocked_user = models.ForeignKey('UserProfile', related_name='blocked_by_profiles', on_delete=models.CASCADE)
+    blocked_by = models.ForeignKey('UserProfile', related_name='blocked_profiles', on_delete=models.CASCADE)
+
+
+class UserNotification(models.Model):
+    content = models.CharField(max_length=4096)
+    user = models.ForeignKey(User, default='', related_name='notifications', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True, blank=True)
+    status = models.IntegerField(default=0, null=True)
+
+    def __str__(self):
+        return self.content
 
 
 class ChatRoom(models.Model):
