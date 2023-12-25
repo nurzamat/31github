@@ -148,6 +148,15 @@ class UserNotification(models.Model):
         return self.content
 
 
+class UserStatus(models.Model):
+    content = models.CharField(max_length=4096)
+    user = models.ForeignKey(User, default='', related_name='statuses', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True, blank=True)
+
+    def __str__(self):
+        return self.content
+
+
 class ChatRoom(models.Model):
     name = models.CharField(max_length=200)
     create_at = models.DateTimeField('date created')
